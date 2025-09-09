@@ -8,8 +8,14 @@ import * as LogLevel from "effect/LogLevel";
 import * as ManagedRuntime from "effect/ManagedRuntime";
 
 const TracingLayer = Effect.gen(function* () {
-  const token = yield* Config.redacted("AXIOM_TOKEN");
-  const dataset = yield* Config.string("AXIOM_DATASET");
+  const token = yield* Config.string("AXIOM_TOKEN").pipe(
+    Config.withDefault(process.env.AXIOM_TOKEN!) // Prevent tree shaking during static analysis
+  );
+  const dataset = yield* Config.string("AXIOM_DATASET").pipe(
+    Config.withDefault(process.env.AXIOM_DATASET!) // Prevent tree shaking during static analysis
+  );
+
+  yield* Effect.log("TracingLayer", { token, dataset });
 
   return Otlp.layer({
     baseUrl: "/ax",
