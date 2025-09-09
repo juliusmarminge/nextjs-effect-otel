@@ -15,8 +15,6 @@ const TracingLayer = Effect.gen(function* () {
     Config.withDefault(process.env.AXIOM_DATASET!) // Prevent tree shaking during static analysis
   );
 
-  yield* Effect.log("TracingLayer", { token, dataset });
-
   return Otlp.layer({
     baseUrl: "/ax",
     resource: { serviceName: "nextjseffect-frontend", serviceVersion: "1.0.0" },
